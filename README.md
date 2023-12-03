@@ -1,5 +1,6 @@
 # advent-of-code
 
-Code to solve the daily challenge on https://adventofcode.com/2022
+Code to solve the daily challenges on https://adventofcode.com/
 
-Code is currently written in Javascript (may be rewritten in Rust later on).
+2022 - Javascript
+2023 - Go
