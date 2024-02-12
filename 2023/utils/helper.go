@@ -20,6 +20,18 @@ func ReverseString(input string) string {
 	return string(runes)
 }
 
+type Number interface {
+	constraints.Integer | constraints.Float
+}
+
+func Sum[T Number](args ...T) T {
+	var sum T
+	for _, valueInt := range args {
+		sum += valueInt
+	}
+	return sum
+}
+
 func Min[T constraints.Ordered](args ...T) T {
 	min := args[0]
 	for _, x := range args {
