@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"strconv"
+
 	"golang.org/x/exp/constraints"
 )
 
@@ -18,6 +20,18 @@ func ReverseString(input string) string {
 		runes[i], runes[j] = runes[j], runes[i]
 	}
 	return string(runes)
+}
+
+func StringToIntArray(arr []string) ([]int, error) {
+	mappedArr := make([]int, 0, len(arr))
+	for _, entry := range arr {
+		mappedEntry, err := strconv.Atoi(entry)
+		if err != nil {
+			return mappedArr, err
+		}
+		mappedArr = append(mappedArr, mappedEntry)
+	}
+	return mappedArr, nil
 }
 
 type Number interface {
