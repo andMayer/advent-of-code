@@ -11,3 +11,10 @@ Cargo.lock
 
 # ignore all input files
 **/*.txt
+
+# IntelliJ IDEA
+.idea/
+**/*.iml
+
+# Kotlin output
+out/
