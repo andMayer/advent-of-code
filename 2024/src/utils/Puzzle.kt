@@ -1,9 +1,13 @@
 package utils
 
-abstract class Puzzle(dir: String, testFilename: String = "test.txt", puzzleFileName: String = "puzzle.txt") {
-
-    private var testFile: List<String> = readFile(dir + testFilename)
-    private var puzzleFile: List<String> = readFile(dir + puzzleFileName)
+abstract class Puzzle(
+    day: Int,
+    path: String = "2024/src/day",
+    testFilename: String = "test.txt",
+    puzzleFileName: String = "puzzle.txt"
+) {
+    private var testFile: List<String> = readFile(path + "$day/" + testFilename)
+    private var puzzleFile: List<String> = readFile(path + "$day/" + puzzleFileName)
 
     protected abstract fun solvePuzzleOne(file: List<String>)
     protected abstract fun solvePuzzleTwo(file: List<String>)
@@ -20,5 +24,4 @@ abstract class Puzzle(dir: String, testFilename: String = "test.txt", puzzleFile
             solvePuzzleTwo(puzzleFile)
         }
     }
-
 }

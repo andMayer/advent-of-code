@@ -2,7 +2,7 @@ package day3
 
 import utils.Puzzle
 
-class MullItOver(dir: String) : Puzzle(dir) {
+class MullItOver(day: Int) : Puzzle(day) {
     override fun solvePuzzleOne(file: List<String>) {
         var result = 0
         val regex = Regex("mul\\((\\d+),(\\d+)\\)")
@@ -55,5 +55,5 @@ class MullItOver(dir: String) : Puzzle(dir) {
 }
 
 fun main() {
-    MullItOver("2024/src/day3/").solve()
+    MullItOver(3).solve()
 }

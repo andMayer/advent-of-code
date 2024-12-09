@@ -3,7 +3,7 @@ package day2
 import utils.Puzzle
 import kotlin.math.abs
 
-class RedNosedReports(dir: String) : Puzzle(dir) {
+class RedNosedReports(day: Int) : Puzzle(day) {
     override fun solvePuzzleOne(file: List<String>) {
         val validReports = file.fold(0) { acc, it -> acc + getReportValue(it) }
         println("Valid reports: $validReports")
@@ -42,5 +42,5 @@ class RedNosedReports(dir: String) : Puzzle(dir) {
 }
 
 fun main() {
-    RedNosedReports("2024/src/day2/").solve()
+    RedNosedReports(2).solve()
 }

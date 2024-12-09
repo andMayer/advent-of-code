@@ -3,7 +3,7 @@ package day1
 import utils.Puzzle
 import kotlin.math.abs
 
-class HistorianHysteria(dir: String) : Puzzle(dir) {
+class HistorianHysteria(day: Int) : Puzzle(day) {
     override fun solvePuzzleOne(file: List<String>) {
         val (groupOne, groupTwo) = createGroups(file)
         groupOne.sort()
@@ -42,5 +42,5 @@ class HistorianHysteria(dir: String) : Puzzle(dir) {
 }
 
 fun main() {
-    HistorianHysteria("2024/src/day1/").solve()
+    HistorianHysteria(1).solve()
 }
