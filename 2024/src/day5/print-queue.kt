@@ -9,10 +9,10 @@ data class Rule(val page1: Int, val page2: Int)
 
 class RuleSet {
     /** Set of all rules */
-    val rules = mutableSetOf<Rule>()
+    private val rules = mutableSetOf<Rule>()
 
     /** Defines a list of pages that are not allowed to be printed after the key page */
-    var bannedOrders: MutableMap<Int, List<Int>> = mutableMapOf()
+    private val bannedOrders: MutableMap<Int, List<Int>> = mutableMapOf()
 
     private fun addRule(rule: Rule) {
         rules.add(rule)
@@ -25,10 +25,26 @@ class RuleSet {
         val (page1, page2) = rule.split("|").map { it.toInt() }
         addRule(Rule(page1, page2))
     }
+
+    fun getAllBannedOrders(): MutableMap<Int, List<Int>> {
+        return bannedOrders
+    }
+
+    fun getBannedOrders(keyPage: Int): List<Int> {
+        return bannedOrders.getOrDefault(keyPage, listOf())
+    }
 }
 
-class PageUpdate(pageProduction: String) {
-    private val pageUpdate: List<Int> = pageProduction.split(",").map { it.toInt() }
+class PageUpdate {
+    private val pageUpdate: List<Int>
+
+    constructor(pageProduction: String) {
+        pageUpdate = pageProduction.split(",").map { it.toInt() }
+    }
+
+    private constructor(pageUpdate: List<Int>) {
+        this.pageUpdate = pageUpdate
+    }
 
     fun getMiddlePage(): Int {
         return pageUpdate[(pageUpdate.size / 2)]
@@ -37,10 +53,20 @@ class PageUpdate(pageProduction: String) {
     fun getPages(): List<Int> {
         return pageUpdate
     }
+
+    fun getSwapped(i: Int, j: Int): PageUpdate {
+        val swapList = pageUpdate.toMutableList()
+        swapList[i] = swapList[j].also { swapList[j] = swapList[i] }
+        return PageUpdate(swapList)
+    }
+
+    override fun toString(): String {
+        return pageUpdate.joinToString(",")
+    }
 }
 
 class Printer(private val ruleSet: RuleSet) {
-    val validPages = mutableListOf<PageUpdate>()
+    private val validPages = mutableListOf<PageUpdate>()
     private val invalidPages = mutableListOf<PageUpdate>()
 
     fun checkOrder(pageUpdate: PageUpdate) {
@@ -48,7 +74,7 @@ class Printer(private val ruleSet: RuleSet) {
         pages.forEachIndexed { i, page ->
             run {
                 val remainingPages = pages.subList(i + 1, pages.size)
-                val bannedOrder = ruleSet.bannedOrders.getOrDefault(page, listOf())
+                val bannedOrder = ruleSet.getBannedOrders(page)
 
                 if (remainingPages.any { bannedOrder.contains(it) }) {
                     invalidPages.add(pageUpdate)
@@ -59,48 +85,65 @@ class Printer(private val ruleSet: RuleSet) {
         validPages.add(pageUpdate)
     }
 
-    fun fixInvalidOrders() {
+    fun getValidPageUpdates(): MutableList<PageUpdate> {
+        return validPages
+    }
 
+    fun getInvalidPageUpdates(): MutableList<PageUpdate> {
+        return invalidPages
     }
 
     fun getMiddlePageSum(pages: List<PageUpdate>): Int {
         return pages.sumOf { it.getMiddlePage() }
     }
 
-    fun printPages() {
-        println("Number of valid updates: ${validPages.size}")
-        println(validPages.joinToString { it.getPages().toString() })
-        println("Valid updates - sum of middle pages: ${getMiddlePageSum(validPages)}")
+    fun getFixedPageUpdates(): List<PageUpdate> {
+        return invalidPages.map { applyRules(it) }
+    }
 
-        println("Number of invalid updates: ${invalidPages.size}")
-        println(invalidPages.joinToString { it.getPages().toString() })
-        println("Invalid updates - sum of middle pages: ${getMiddlePageSum(invalidPages)}")
+    private fun applyRules(pageUpdate: PageUpdate): PageUpdate {
+        val pages = pageUpdate.getPages()
+        pages.forEachIndexed { i, page ->
+            run {
+                val remainingPages = pages.subList(i + 1, pages.size)
+                val bannedOrder = ruleSet.getBannedOrders(page)
+
+                val bannedIndex =
+                    remainingPages.indexOfFirst { remainingPage -> bannedOrder.find { remainingPage == it } != null }
+                if (bannedIndex >= 0) {
+                    val swappedPageUpdate = pageUpdate.getSwapped(i, bannedIndex + i + 1)
+                    return applyRules(swappedPageUpdate)
+                }
+            }
+        }
+        return pageUpdate
     }
 }
 
 
 class PrintQueue(day: Int) : Puzzle(day) {
+    override fun solvePuzzleOne(file: List<String>): Int {
+        val printer = parseFile(file)
+        return printer.getMiddlePageSum(printer.getValidPageUpdates())
+    }
 
-    override fun solvePuzzleOne(file: List<String>) {
+    override fun solvePuzzleTwo(file: List<String>): Int {
+        val printer = parseFile(file)
+        return printer.getMiddlePageSum(printer.getFixedPageUpdates())
+    }
+
+    private fun parseFile(file: List<String>): Printer {
         val ruleSet = RuleSet()
-        var printer: Printer? = null
+        val printer = Printer(ruleSet)
 
         file.forEach { line ->
             if (line.contains("|")) {
                 ruleSet.addRule(line)
             } else {
-                if (printer == null) {
-                    printer = Printer(ruleSet)
-                }
-                printer?.checkOrder(PageUpdate(line))
+                printer.checkOrder(PageUpdate(line))
             }
         }
-        printer?.printPages()
-    }
-
-    override fun solvePuzzleTwo(file: List<String>) {
-        /** Requires puzzle part One to solve part Two */
-//        printer.fixInvalidOrders()
+        return printer
     }
 
 }

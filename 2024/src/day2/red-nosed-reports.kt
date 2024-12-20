@@ -4,9 +4,8 @@ import utils.Puzzle
 import kotlin.math.abs
 
 class RedNosedReports(day: Int) : Puzzle(day) {
-    override fun solvePuzzleOne(file: List<String>) {
-        val validReports = file.fold(0) { acc, it -> acc + getReportValue(it) }
-        println("Valid reports: $validReports")
+    override fun solvePuzzleOne(file: List<String>): Int {
+        return file.fold(0) { acc, it -> acc + getReportValue(it) }
     }
 
     private fun getReportValue(report: String, useDampener: Boolean = false): Int {
@@ -35,9 +34,8 @@ class RedNosedReports(day: Int) : Puzzle(day) {
         return false
     }
 
-    override fun solvePuzzleTwo(file: List<String>) {
-        val validReports = file.fold(0) { acc, it -> acc + getReportValue(it, true) }
-        println("Valid reports using dampener: $validReports")
+    override fun solvePuzzleTwo(file: List<String>): Int {
+        return file.fold(0) { acc, it -> acc + getReportValue(it, true) }
     }
 }
 

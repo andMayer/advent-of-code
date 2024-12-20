@@ -3,7 +3,7 @@ package day3
 import utils.Puzzle
 
 class MullItOver(day: Int) : Puzzle(day) {
-    override fun solvePuzzleOne(file: List<String>) {
+    override fun solvePuzzleOne(file: List<String>): Int {
         var result = 0
         val regex = Regex("mul\\((\\d+),(\\d+)\\)")
         for (line in file) {
@@ -12,10 +12,10 @@ class MullItOver(day: Int) : Puzzle(day) {
                 result += match.groupValues[1].toInt() * match.groupValues[2].toInt()
             }
         }
-        println("Sum of multiplications: $result")
+        return result
     }
 
-    override fun solvePuzzleTwo(file: List<String>) {
+    override fun solvePuzzleTwo(file: List<String>): Int {
         var result = 0
         val multiplications = Regex("mul\\((\\d+),(\\d+)\\)")
         val doConditions = Regex("do\\(\\)")
@@ -50,7 +50,7 @@ class MullItOver(day: Int) : Puzzle(day) {
             }
         }
 
-        println("Sum of enabled multiplications: $result")
+        return result
     }
 }
 

@@ -4,19 +4,17 @@ import utils.Puzzle
 import kotlin.math.abs
 
 class CeresSearch(day: Int) : Puzzle(day) {
-    override fun solvePuzzleOne(file: List<String>) {
+    override fun solvePuzzleOne(file: List<String>): Int {
         val verticalLines = getVerticals(file)
 
         val numDiagonals = file.size + verticalLines.size - 1
         val diagonalsFalling = getDiagonalFalling(file, numDiagonals)
         val diagonalsRising = getDiagonalRising(file, numDiagonals)
 
-        val occurrences = getOccurrences(file) +
+        return getOccurrences(file) +
                 getOccurrences(verticalLines) +
                 getOccurrences(diagonalsFalling) +
                 getOccurrences(diagonalsRising)
-
-        println("Occurrences: $occurrences")
     }
 
     private fun getDiagonalFalling(file: List<String>, numDiagonals: Int): List<String> {
@@ -71,7 +69,7 @@ class CeresSearch(day: Int) : Puzzle(day) {
         return occurrences
     }
 
-    override fun solvePuzzleTwo(file: List<String>) {
+    override fun solvePuzzleTwo(file: List<String>): Int {
         var occurrences = 0
         for (lines in file.asSequence().windowed(3, 1)) {
             for ((j, entries) in lines[1].asSequence().windowed(3, 1).withIndex()) {
@@ -90,7 +88,7 @@ class CeresSearch(day: Int) : Puzzle(day) {
                 }
             }
         }
-        println("\nOccurrences: $occurrences")
+        return occurrences
     }
 }
 

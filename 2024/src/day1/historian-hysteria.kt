@@ -4,7 +4,7 @@ import utils.Puzzle
 import kotlin.math.abs
 
 class HistorianHysteria(day: Int) : Puzzle(day) {
-    override fun solvePuzzleOne(file: List<String>) {
+    override fun solvePuzzleOne(file: List<String>): Int {
         val (groupOne, groupTwo) = createGroups(file)
         groupOne.sort()
         groupTwo.sort()
@@ -13,17 +13,17 @@ class HistorianHysteria(day: Int) : Puzzle(day) {
         for (i in groupOne.indices) {
             totalDistance += abs(groupOne[i] - groupTwo[i])
         }
-        println("Distance: $totalDistance") // 13 and 1580061
+        return totalDistance
     }
 
-    override fun solvePuzzleTwo(file: List<String>) {
+    override fun solvePuzzleTwo(file: List<String>): Int {
         val (groupOne, groupTwo) = createGroups(file)
 
         var similarity = 0
         for (i in groupOne) {
             similarity += i * groupTwo.count { it == i }
         }
-        println("Similarity: $similarity") // 31 and 23046913
+        return similarity
     }
 
     private fun createGroups(file: List<String>): Pair<ArrayList<Int>, ArrayList<Int>> {
